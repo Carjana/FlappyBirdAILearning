@@ -418,6 +418,52 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 17.615227, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &791392779
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 791392781}
+  - component: {fileID: 791392780}
+  m_Layer: 0
+  m_Name: HumanPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &791392780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791392779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5895a7dadd3c492f92ddb899312f4e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  possessedBird: {fileID: 1847588750}
+--- !u!4 &791392781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791392779}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &956493201
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 956493202}
+  - component: {fileID: 956493203}
   m_Layer: 0
   m_Name: ObstacleSpawner
   m_TagString: Untagged
@@ -443,12 +490,27 @@ Transform:
   m_GameObject: {fileID: 956493201}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 15, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &956493203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956493201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89aa8540dcc907c409bbbe7f9fc4a050, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnInterval: 2
+  resetEvent: {fileID: 11400000, guid: dadddc87f88c4b44093ac78357251bef, type: 2}
+  obstaclePrefab: {fileID: 8314778081989351562, guid: 8febe60ee65468d4b944c7218ea1e961, type: 3}
 --- !u!1 &976838638
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +722,7 @@ GameObject:
   - component: {fileID: 1847588751}
   - component: {fileID: 1847588752}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Bird
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -691,12 +753,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1847588748}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d33f14f23ad7808419569a281c212d8d, type: 3}
+  m_Script: {fileID: 11500000, guid: cf071b2f86c0d5c4f8f2b3e58f93ca10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   jumpForce: 5
-  gravityScale: 1
-  action: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  gravity: 9.81
   deathEvent: {fileID: 11400000, guid: 54341770646fac54fb8a568cc84afcb3, type: 2}
   resetEvent: {fileID: 11400000, guid: dadddc87f88c4b44093ac78357251bef, type: 2}
 --- !u!50 &1847588751
@@ -771,3 +832,4 @@ SceneRoots:
   - {fileID: 1847588749}
   - {fileID: 1168462654}
   - {fileID: 956493202}
+  - {fileID: 791392781}
