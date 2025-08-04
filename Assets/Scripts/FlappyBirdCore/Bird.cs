@@ -11,7 +11,7 @@ namespace FlappyBirdCore
         [SerializeField] private float gravity = 9.81f;
         private Rigidbody2D _rb;
 
-        [SerializeField] private GameEvent deathEvent;
+        [SerializeField] private GameEvent startEvent;
         [SerializeField] private GameEvent resetEvent;
 
         public bool IsDead { get; private set; }
@@ -31,6 +31,7 @@ namespace FlappyBirdCore
         private void Start()
         {
             resetEvent.Subscribe((_) => Reset());
+            startEvent.Subscribe((_) => StartBird());
         }
 
         private void Update()
@@ -66,7 +67,6 @@ namespace FlappyBirdCore
         private void HandleDeath()
         {
             IsDead = true;
-            deathEvent.RaiseEvent(this);
             _rb.linearVelocity = Vector2.zero;
         }
 

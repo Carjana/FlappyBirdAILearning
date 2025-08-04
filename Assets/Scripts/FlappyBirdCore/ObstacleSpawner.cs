@@ -12,18 +12,22 @@ namespace FlappyBirdCore
     public class ObstacleSpawner : MonoBehaviour
     {
         [SerializeField] private float spawnInterval = 2f;
-        [SerializeField] private GameEvent resetEvent;
         [SerializeField] private Obstacle obstaclePrefab;
+        
+        [SerializeField] private GameEvent resetEvent;
+        [SerializeField] private GameEvent preAgentStartEvent;
         
         private CountdownTimer _timer;
         private bool _shouldReset;
         
         private ObjectPool<Obstacle> _obstaclePool;
-        private List<Obstacle> _activeObstacles = new();
-            
+        public List<Obstacle> ActiveObstacles { get; } = new();
+
         private void Start()
         {
             resetEvent.Subscribe(_ => ResetSpawner());
+            preAgentStartEvent.Subscribe(_ => StartSpawning());
+            
             _timer = new CountdownTimer();
             _timer.TimerFinished += OnTimerFinished;
             _timer.TimerStarted += OnTimerStarted;
@@ -54,14 +58,14 @@ namespace FlappyBirdCore
         {
             obstacle.ResetObstacle();
             obstacle.gameObject.SetActive(false);
-            _activeObstacles.Remove(obstacle);
+            ActiveObstacles.Remove(obstacle);
         }
 
         private void OnGetObstacle(Obstacle obstacle)
         {
             obstacle.StartMoving();
             obstacle.gameObject.SetActive(true);
-            _activeObstacles.Add(obstacle);
+            ActiveObstacles.Add(obstacle);
         }
 
         private Obstacle OnCreateObstacle()
@@ -100,9 +104,9 @@ namespace FlappyBirdCore
 
         private void DespawnAllObstacles()
         {
-            for (int i = _activeObstacles.Count - 1; i >= 0; i--)
+            for (int i = ActiveObstacles.Count - 1; i >= 0; i--)
             {
-                _obstaclePool.Release(_activeObstacles[i]);
+                _obstaclePool.Release(ActiveObstacles[i]);
             }
         }
         
