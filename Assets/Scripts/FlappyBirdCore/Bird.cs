@@ -1,3 +1,4 @@
+using System;
 using JohaToolkit.UnityEngine.Extensions;
 using JohaToolkit.UnityEngine.ScriptableObjects.Events;
 using Sirenix.OdinInspector;
@@ -14,6 +15,10 @@ namespace FlappyBirdCore
         [SerializeField] private GameEvent startEvent;
         [SerializeField] private GameEvent resetEvent;
 
+        public event Action BirdReset;
+        public event Action BirdJumped;
+        public event Action BirdDied;
+        
         public bool IsDead { get; private set; }
         public bool HasStarted { get; private set; }
         public float Velocity { get; private set; }
@@ -53,6 +58,7 @@ namespace FlappyBirdCore
         {
             if (IsDead || !HasStarted)
                 return;
+            BirdJumped?.Invoke();
             Velocity = jumpForce;
         }
 
@@ -66,6 +72,9 @@ namespace FlappyBirdCore
 
         private void HandleDeath()
         {
+            if (IsDead)
+                return;
+            BirdDied?.Invoke();
             IsDead = true;
             _rb.linearVelocity = Vector2.zero;
         }
@@ -73,6 +82,7 @@ namespace FlappyBirdCore
         [Button]
         public void Reset()
         {
+            BirdReset?.Invoke();
             transform.position = Vector2.zero;
             _rb.linearVelocity = Vector2.zero;
             IsDead = false;

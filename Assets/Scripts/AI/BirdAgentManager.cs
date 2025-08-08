@@ -80,14 +80,16 @@ namespace AI
             
             _updateTimer += Time.deltaTime;
 
-            if (_updateTimer >= updateRate || !_hasUpdated)
+            if (_updateTimer >= updateRate && !_hasUpdated)
             {
+                Debug.Log("Updating...");
                 _hasUpdated = true;
                 preAgentTickEvent?.RaiseEvent(this);
                 agentTickEvent?.RaiseEvent(this);
             }
             else if(_updateTimer >= updateRate + updateRate/2 && _hasUpdated)
             {
+                _updateTimer = 0;
                 _hasUpdated = false;
                 postAgentTickEvent?.RaiseEvent(this);
             }

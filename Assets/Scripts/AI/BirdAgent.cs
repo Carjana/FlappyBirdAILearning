@@ -1,6 +1,9 @@
-using System;
+using System.Linq;
+using System.Text;
 using FlappyBirdCore;
 using JohaToolkit.UnityEngine.ScriptableObjects.Events;
+using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,13 +11,20 @@ namespace AI
 {
     public class BirdAgent : MonoBehaviour
     {
+        [Title("References")]
         [SerializeField] private Bird possessedBird;
         [SerializeField] private GameEvent agentStartEvent;
         [SerializeField] private GameEvent agentResetEvent;
         [SerializeField] private GameEvent agentTickEvent;
         [SerializeField] private GameEvent postAgentTickEvent;
+        
+        [Title("Settings")]
+        [SerializeField] private float gridSizePos = 0.1f;
+        [SerializeField] private float gridSizeVelocity = 0.1f;
+        [SerializeField] private bool shouldLog;
+        [SerializeReference] private ActionChoosingStrategy actionChoosingStrategy;
 
-        private (Vector2 state, bool action) _selectedAction;
+        private (GameState state, bool action) _selectedAction;
         
         public bool IsDead => possessedBird.IsDead;
         
@@ -48,7 +58,7 @@ namespace AI
             if (possessedBird.IsDead || !possessedBird.HasStarted)
                 return;
             
-            Vector2 currentState = GetCurrentState();
+            GameState currentState = GetCurrentState();
 
             bool shouldJump = ChooseAction(currentState);
             
@@ -63,41 +73,62 @@ namespace AI
         {
             float reward = GetReward();
             
-            Vector2 currentState = GetCurrentState();
+            GameState currentState = GetCurrentState();
             BirdAgentManager.Instance.QLearningManager.UpdateQValue(_selectedAction.state, _selectedAction.action, currentState, reward);
         }
 
-        private Vector2 GetCurrentState()
+        private GameState GetCurrentState()
         {
-            Vector2 rawState = ObstacleObserver.Instance.GetNearestObstacleLocal(possessedBird.Position);
+            Vector2 nearestObstacle = ObstacleObserver.Instance.GetNearestObstacleLocal(possessedBird.Position);
+            return new GameState
+            {
+                NearestObstacle = PosOnGrid(nearestObstacle),
+                Velocity = 0
+            };
+        }
+
+        private Vector2 PosOnGrid(Vector2 pos)
+        {
             return new Vector2(
-                Mathf.Round(rawState.x * 10f) / 10f, // Round to 1 decimal place
-                Mathf.Round(rawState.y * 10f) / 10f  // Round to 1 decimal place
-            );
+                Mathf.RoundToInt(pos.x / gridSizePos),
+                Mathf.RoundToInt(pos.y / gridSizePos)
+                );
+        }
+
+        private float VelocityOnGrid(float velocity)
+        {
+             int vel = (Mathf.RoundToInt(velocity / gridSizeVelocity));
+            return vel;
         }
         
-        private bool ChooseAction(Vector2 currentState)
+        private bool ChooseAction(GameState currentState)
         {
             (bool action, float qValue)[] actions = BirdAgentManager.Instance.QLearningManager.GetActions(currentState);
+            if (actions.Any(a => a.qValue < 0))
+            {
+                float a = 0;
+            }
             if (actions.Length == 0)
             {
-                float jumpProbability = 0.1f;
-                return Random.Range(0f, 1f) < jumpProbability;
+                if(shouldLog)
+                    Debug.Log("Choosing uninformed action");
+                return actionChoosingStrategy.ChooseUnInformedAction();
             }
 
-            WeightedPicker<bool> picker = new();
-            foreach ((bool action, float qValue) in actions)
+            if(shouldLog)
             {
-                picker.Add(action, qValue);
+                StringBuilder builder = new();
+                actions.ForEach(a => builder.Append($"Action: {a.action} | QValue: {a.qValue}"));
+                Debug.Log($"Choosing informed action {builder}");
             }
-                
-            return picker.Pick();
+            return actionChoosingStrategy.ChooseInformedAction(actions);
         }
 
         private float GetReward()
         {
             // Maybe take time into account?
-            return possessedBird.IsDead ? -1 : 1;
+            float distToCenter = Mathf.Abs(ObstacleObserver.Instance.GetNearestObstacleLocal(possessedBird.Position).y - possessedBird.Position.y);
+            return (possessedBird.IsDead ? -10 : 1);
         }
     }
 }
