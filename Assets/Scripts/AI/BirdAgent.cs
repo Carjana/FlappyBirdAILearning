@@ -14,7 +14,7 @@ namespace AI
         [SerializeField] private GameEvent agentStartEvent;
         [SerializeField] private GameEvent agentResetEvent;
         [SerializeField] private GameEvent agentTickEvent;
-        [SerializeField] private GameEvent postAgentTickEvent;
+        [SerializeField] private GameEvent preAgentTickEvent;
         
         [Title("Settings")]
         [SerializeField] private float gridSizePos = 0.1f;
@@ -22,13 +22,14 @@ namespace AI
         [SerializeReference] private ActionChoosingStrategy actionChoosingStrategy;
 
         private (GameState state, bool action) _selectedAction;
+        private bool _actionChosen;
         
         public bool IsDead => possessedBird.IsDead;
         
         private void Awake()
         {
             agentTickEvent.Subscribe(_ => OnAgentTick());
-            postAgentTickEvent.Subscribe(_ => OnPostAgentTick());
+            preAgentTickEvent.Subscribe(_ => OnPreAgentTick());
             agentStartEvent.Subscribe(_ => StartAgent());
             agentResetEvent.Subscribe(_ => ResetAgent());
         }
@@ -63,10 +64,15 @@ namespace AI
                 possessedBird.Jump();
             }
             _selectedAction = (currentState, shouldJump);
+            _actionChosen = true;
         }
         
-        private void OnPostAgentTick()
+        private void OnPreAgentTick()
         {
+            if (!_actionChosen)
+                return;
+            
+            _actionChosen = false;
             float reward = GetReward();
             GameState currentState = GetCurrentState();
             if (currentState.NearestObstacle.Equals(_selectedAction.state.NearestObstacle))

@@ -2090,6 +2090,10 @@ PrefabInstance:
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1034472975567601572, guid: f33ca8dc7a88d4948842015e46ffed7a, type: 3}
+      propertyPath: preAgentTickEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: becab9a2beabf624283fc107c3b0e1fc, type: 2}
+    - target: {fileID: 1034472975567601572, guid: f33ca8dc7a88d4948842015e46ffed7a, type: 3}
       propertyPath: actionChoosingStrategy
       value: 5887182367731220618
       objectReference: {fileID: 0}

@@ -49,7 +49,7 @@ MonoBehaviour:
   agentStartEvent: {fileID: 11400000, guid: 3e1f0206975718e43889e319b66f3a33, type: 2}
   agentResetEvent: {fileID: 11400000, guid: dadddc87f88c4b44093ac78357251bef, type: 2}
   agentTickEvent: {fileID: 11400000, guid: aae19ce31c314764587b899951b58767, type: 2}
-  postAgentTickEvent: {fileID: 11400000, guid: 13fbfd83d1a19fb409e687690a82209e, type: 2}
+  preAgentTickEvent: {fileID: 11400000, guid: becab9a2beabf624283fc107c3b0e1fc, type: 2}
   gridSizePos: 0.1
   shouldLog: 0
   actionChoosingStrategy:

@@ -33,7 +33,6 @@ namespace AI
         public QLearningManager QLearningManager { get; private set; }
 
         private float _updateTimer;
-        private bool _hasUpdated;
         private bool _isRunning;
         
         protected override void Awake()
@@ -80,30 +79,26 @@ namespace AI
             
             _updateTimer += Time.deltaTime;
 
-            if (_updateTimer >= updateRate && !_hasUpdated)
-            {
-                _hasUpdated = true;
-                preAgentTickEvent?.RaiseEvent(this);
-                agentTickEvent?.RaiseEvent(this);
-            }
-            else if(_updateTimer >= updateRate + updateRate/2 && _hasUpdated)
-            {
-                _updateTimer = 0;
-                _hasUpdated = false;
-                postAgentTickEvent?.RaiseEvent(this);
-                
-                int aliveAgents = birdAgents.Count(a => !a.IsDead);
-            
-                aliveAgentsCount.Value = aliveAgents;
-
-                if (aliveAgents > 0) 
-                    return;
-            
-                ResetGeneration();
-                StartGeneration();
-            }
-
             aliveAgentsCount.Value = birdAgents.Count(a => !a.IsDead);
+
+            if (!(_updateTimer >= updateRate)) 
+                return;
+            
+            preAgentTickEvent?.RaiseEvent(this);
+            agentTickEvent?.RaiseEvent(this);
+            postAgentTickEvent?.RaiseEvent(this);
+            _updateTimer = 0;
+            
+            int aliveAgents = birdAgents.Count(a => !a.IsDead);
+        
+            aliveAgentsCount.Value = aliveAgents;
+
+            if (aliveAgents > 0) 
+                return;
+        
+            ResetGeneration();
+            StartGeneration();
+
         }
         
         public void StartGeneration()
@@ -117,7 +112,6 @@ namespace AI
             agentPreStartEvent?.RaiseEvent(this);
             startEvent?.RaiseEvent(this);
             _isRunning = true;
-            _hasUpdated = false;
         }
         
         public void ResetGeneration()
