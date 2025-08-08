@@ -7,6 +7,5 @@ namespace AI
     public struct GameState
     {
         public Vector2 NearestObstacle;
-        public float Velocity;
     }
 }

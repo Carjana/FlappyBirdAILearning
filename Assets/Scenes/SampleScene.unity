@@ -1328,8 +1328,8 @@ Transform:
   m_GameObject: {fileID: 631717711}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.88, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 8.85, z: 0}
+  m_LocalScale: {x: 1, y: 8.0875, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1168462654}
@@ -2082,6 +2082,14 @@ PrefabInstance:
       value: 0.16
       objectReference: {fileID: 0}
     - target: {fileID: 1034472975567601572, guid: f33ca8dc7a88d4948842015e46ffed7a, type: 3}
+      propertyPath: shouldLog
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034472975567601572, guid: f33ca8dc7a88d4948842015e46ffed7a, type: 3}
+      propertyPath: gridSizePos
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034472975567601572, guid: f33ca8dc7a88d4948842015e46ffed7a, type: 3}
       propertyPath: actionChoosingStrategy
       value: 5887182367731220618
       objectReference: {fileID: 0}
@@ -2540,8 +2548,8 @@ Transform:
   m_GameObject: {fileID: 1570130617}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.11, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -11.86, z: 0}
+  m_LocalScale: {x: 1, y: 14.828906, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1168462654}
@@ -2837,7 +2845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   birdAgentPrefab: {fileID: 1034472975567601572, guid: f33ca8dc7a88d4948842015e46ffed7a, type: 3}
-  numberOfAgents: 0
+  numberOfAgents: 200
 --- !u!1 &1847588748
 GameObject:
   m_ObjectHideFlags: 0
@@ -2982,8 +2990,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   learningRate: 0.3
-  discountFactor: 0.9
-  updateRate: 0.01
+  discountFactor: 1
+  updateRate: 0.1
   agentPreStartEvent: {fileID: 11400000, guid: 9a1025b3d36f4654bb4a6f5aeeeaed7b, type: 2}
   startEvent: {fileID: 11400000, guid: 3e1f0206975718e43889e319b66f3a33, type: 2}
   resetEvent: {fileID: 11400000, guid: dadddc87f88c4b44093ac78357251bef, type: 2}

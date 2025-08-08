@@ -82,7 +82,6 @@ namespace AI
 
             if (_updateTimer >= updateRate && !_hasUpdated)
             {
-                Debug.Log("Updating...");
                 _hasUpdated = true;
                 preAgentTickEvent?.RaiseEvent(this);
                 agentTickEvent?.RaiseEvent(this);
@@ -92,18 +91,19 @@ namespace AI
                 _updateTimer = 0;
                 _hasUpdated = false;
                 postAgentTickEvent?.RaiseEvent(this);
+                
+                int aliveAgents = birdAgents.Count(a => !a.IsDead);
+            
+                aliveAgentsCount.Value = aliveAgents;
+
+                if (aliveAgents > 0) 
+                    return;
+            
+                ResetGeneration();
+                StartGeneration();
             }
 
-            int aliveAgents = birdAgents.Count(a => !a.IsDead);
-            
-            aliveAgentsCount.Value = aliveAgents;
-
-            if (aliveAgents > 0) 
-                return;
-            
-            ResetGeneration();
-            StartGeneration();
-
+            aliveAgentsCount.Value = birdAgents.Count(a => !a.IsDead);
         }
         
         public void StartGeneration()

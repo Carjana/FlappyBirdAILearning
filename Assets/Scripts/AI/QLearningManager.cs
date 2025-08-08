@@ -39,6 +39,11 @@ namespace AI
             if (!QTable.TryGetValue(oldState, oldAction, out float currentQValue))
                 return;
 
+            if (reward < 0)
+            {
+                int a = 1;
+            }
+            
             float maxFutureQValue = GetColumnsOrdAddRow(newState).Select(kvp => kvp.Item2).Max();
             
             float newQValue = (1 - LearningRate) * currentQValue + LearningRate * (reward + DiscountFactor * maxFutureQValue);

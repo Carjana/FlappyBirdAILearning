@@ -1,11 +1,9 @@
-using System.Linq;
 using System.Text;
 using FlappyBirdCore;
 using JohaToolkit.UnityEngine.ScriptableObjects.Events;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace AI
 {
@@ -20,7 +18,6 @@ namespace AI
         
         [Title("Settings")]
         [SerializeField] private float gridSizePos = 0.1f;
-        [SerializeField] private float gridSizeVelocity = 0.1f;
         [SerializeField] private bool shouldLog;
         [SerializeReference] private ActionChoosingStrategy actionChoosingStrategy;
 
@@ -59,7 +56,6 @@ namespace AI
                 return;
             
             GameState currentState = GetCurrentState();
-
             bool shouldJump = ChooseAction(currentState);
             
             if (shouldJump)
@@ -72,8 +68,13 @@ namespace AI
         private void OnPostAgentTick()
         {
             float reward = GetReward();
-            
             GameState currentState = GetCurrentState();
+            if (currentState.NearestObstacle.Equals(_selectedAction.state.NearestObstacle))
+            {
+                if(shouldLog)
+                    Debug.LogError("Current state is the same as previous state, skipping Q-value update.");
+                return;
+            }
             BirdAgentManager.Instance.QLearningManager.UpdateQValue(_selectedAction.state, _selectedAction.action, currentState, reward);
         }
 
@@ -82,8 +83,7 @@ namespace AI
             Vector2 nearestObstacle = ObstacleObserver.Instance.GetNearestObstacleLocal(possessedBird.Position);
             return new GameState
             {
-                NearestObstacle = PosOnGrid(nearestObstacle),
-                Velocity = 0
+                NearestObstacle = PosOnGrid(nearestObstacle)
             };
         }
 
@@ -94,20 +94,10 @@ namespace AI
                 Mathf.RoundToInt(pos.y / gridSizePos)
                 );
         }
-
-        private float VelocityOnGrid(float velocity)
-        {
-             int vel = (Mathf.RoundToInt(velocity / gridSizeVelocity));
-            return vel;
-        }
         
         private bool ChooseAction(GameState currentState)
         {
             (bool action, float qValue)[] actions = BirdAgentManager.Instance.QLearningManager.GetActions(currentState);
-            if (actions.Any(a => a.qValue < 0))
-            {
-                float a = 0;
-            }
             if (actions.Length == 0)
             {
                 if(shouldLog)
@@ -126,9 +116,8 @@ namespace AI
 
         private float GetReward()
         {
-            // Maybe take time into account?
-            float distToCenter = Mathf.Abs(ObstacleObserver.Instance.GetNearestObstacleLocal(possessedBird.Position).y - possessedBird.Position.y);
-            return (possessedBird.IsDead ? -10 : 1);
+            float distToCenter = Mathf.Abs(ObstacleObserver.Instance.GetNearestObstacleGlobal(possessedBird.Position).y - possessedBird.Position.y);
+            return possessedBird.IsDead ? -1000 : 15;
         }
     }
 }

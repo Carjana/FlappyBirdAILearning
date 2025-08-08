@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using JohaToolkit.UnityEngine.Extensions;
+using UnityEngine;
+using Random = System.Random;
 
 public class WeightedPicker<TItem>
 {

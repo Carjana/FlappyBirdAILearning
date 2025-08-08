@@ -13,6 +13,7 @@ namespace AI
         [SerializeField] private ObstacleSpawner obstacleSpawner;
 
         private Vector2 _nearestObstacle;
+
         private bool _isDirty;
         
         protected override void Awake()
@@ -28,9 +29,17 @@ namespace AI
 
         public Vector2 GetNearestObstacleLocal(Vector2 position)
         {
+            return GetNearestObstacleGlobal(position) - position;
             if(_isDirty)
                 _nearestObstacle = GetNearestObstacle(position);
             return new Vector2(_nearestObstacle.x, _nearestObstacle.y) - position;
+        }
+
+        public Vector2 GetNearestObstacleGlobal(Vector2 position)
+        {
+            if(_isDirty)
+                _nearestObstacle = GetNearestObstacle(position);
+            return new Vector2(_nearestObstacle.x, _nearestObstacle.y);
         }
 
         private Vector2 GetNearestObstacle(Vector2 position)

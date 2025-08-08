@@ -51,17 +51,18 @@ MonoBehaviour:
   agentTickEvent: {fileID: 11400000, guid: aae19ce31c314764587b899951b58767, type: 2}
   postAgentTickEvent: {fileID: 11400000, guid: 13fbfd83d1a19fb409e687690a82209e, type: 2}
   gridSizePos: 0.1
-  gridSizeVelocity: 0.1
   shouldLog: 0
   actionChoosingStrategy:
-    rid: 5887182367731220655
+    rid: 958907376336371847
   references:
     version: 2
     RefIds:
-    - rid: 5887182367731220655
-      type: {class: BestStrategy, ns: AI, asm: Assembly-CSharp}
+    - rid: 958907376336371847
+      type: {class: LearningStrategy, ns: AI, asm: Assembly-CSharp}
       data:
-        jumpProbability: 0
+        jumpProbability: 0.01
+        pickerBaseValue: 1
+        mutateProbability: 0.01
 --- !u!1 &8064185737619184469
 GameObject:
   m_ObjectHideFlags: 0
