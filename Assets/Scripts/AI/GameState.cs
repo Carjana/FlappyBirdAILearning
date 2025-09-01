@@ -1,11 +1,14 @@
 ﻿
 
+using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace AI
 {
+    [Serializable]
     public struct GameState
     {
-        public Vector2 NearestObstacle;
+        [JsonConverter(typeof(Vector2Converter))]public Vector2 NearestObstacle;
     }
 }

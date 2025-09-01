@@ -30,7 +30,8 @@ namespace AI
         [Title("Bird Agents")]
         [SerializeField, ReadOnly] private List<BirdAgent> birdAgents;
 
-        public QLearningManager QLearningManager { get; private set; }
+        public QLearningManager<GameState, bool> QLearningManager { get; private set; }
+        public int CurrentGeneration => currentGeneration.Value;
 
         private float _updateTimer;
         private bool _isRunning;
@@ -38,11 +39,17 @@ namespace AI
         protected override void Awake()
         {
             base.Awake();
-            QLearningManager = new QLearningManager(learningRate, discountFactor);
+            QLearningManager = new QLearningManager<GameState, bool>(new[] {true, false }, learningRate, discountFactor);
             birdAgents = new List<BirdAgent>();
             
             currentGeneration.Value = 0;
             // Birds register in Start Method!!!!
+        }
+        
+        public void SetLearningData(int generation, Table<GameState, bool, float> qTable)
+        {
+            currentGeneration.Value = generation;
+            QLearningManager.SetQTable(qTable);
         }
         
         public void RegisterAgent(BirdAgent agent)

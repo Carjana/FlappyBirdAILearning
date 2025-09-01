@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Linq;
 
 namespace AI
 {
     public class Table<TRow, TCol, TValue>
     {
-        public Dictionary<(TRow, TCol), TValue> TableValues { get; private set; } = new();
+        public Dictionary<(TRow row, TCol col), TValue> TableValues { get; private set; } = new();
         public HashSet<TRow> Rows { get; private set; } = new();
         public HashSet<TCol> Cols { get; private set; } = new();
 
@@ -16,6 +16,30 @@ namespace AI
         {
             AddRows(rows, defaultValue);
             AddColumns(cols, defaultValue);
+        }
+
+        public Table(Dictionary<(TRow row, TCol col), TValue> tableValues)
+        {
+            SetTable(tableValues);
+        }
+
+        public void SetTable(Dictionary<(TRow row, TCol col), TValue> tableValues)
+        {
+            Rows.Clear();
+            Cols.Clear();
+            TableValues.Clear();
+
+            TableValues = tableValues;
+            
+            foreach (TRow t in tableValues.Keys.Select(k => k.row))
+            {
+                 Rows.Add(t);
+            }
+            
+            foreach (TCol c in tableValues.Keys.Select(k => k.col))
+            {
+                Cols.Add(c);
+            }
         }
 
         private void AddRows(TRow[] rows, TValue defaultValue)
@@ -55,6 +79,17 @@ namespace AI
         }
         
         public bool TryGetValue(TRow row, TCol col, out TValue value) => TableValues.TryGetValue((row, col), out value);
+        public bool TryGetValue(int rowIndex, int colIndex, out TValue value)
+        {
+            if (rowIndex < 0 || rowIndex >= Rows.Count || colIndex < 0 || colIndex >= Cols.Count)
+            {
+                value = default;
+                return false;
+            }
+            TRow row = Rows.ElementAt(rowIndex);
+            TCol col = Cols.ElementAt(colIndex);
+            return TableValues.TryGetValue((row, col), out value);
+        }
         
         public void SetValue(TRow row, TCol col, TValue value)
         {

@@ -123,7 +123,7 @@ namespace AI
         private float GetReward()
         {
             float distToCenter = Mathf.Abs(ObstacleObserver.Instance.GetNearestObstacleGlobal(possessedBird.Position).y - possessedBird.Position.y);
-            return possessedBird.IsDead ? -1000 : 15;
+            return possessedBird.IsDead ? -50 : 15;
         }
     }
 }
